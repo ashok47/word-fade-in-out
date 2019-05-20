@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<script type="text/javascript">
+// Show an element
+var show = function (elem) {
+
+  // Get the natural height of the element
+  var getHeight = function () {
+    elem.style.display = 'block'; // Make it visible
+    var height = elem.scrollHeight + 'px'; // Get it's height
+    elem.style.display = ''; //  Hide it again
+    return height;
+  };
+
+  var height = getHeight(); // Get the natural height
+  elem.classList.add('is-visible'); // Make the element visible
+  elem.style.height = height; // Update the max-height
+
+  // Once the transition is complete, remove the inline max-height so the content can scale responsively
+  window.setTimeout(function () {
+    elem.style.height = '';
+  }, 350);
+
+};
+
+// Hide an element
+var hide = function (elem) {
+
+  // Give the element a height to change from
+  elem.style.height = elem.scrollHeight + 'px';
+
+  // Set the height back to 0
+  window.setTimeout(function () {
+    elem.style.height = '0';
+  }, 1);
+
+  // When the transition is complete, hide it
+  window.setTimeout(function () {
+    elem.classList.remove('is-visible');
+  }, 350);
+
+};
+
+// Toggle element visibility
+var toggle = function (elem, timing) {
+
+  // If the element is visible, hide it
+  if (elem.classList.contains('is-visible')) {
+    hide(elem);
+    return;
+  }
+
+  // Otherwise, show it
+  show(elem);
+  
+};
+
+// Listen for click events
+document.addEventListener('click', function (event) {
+
+  // Make sure clicked element is our toggle
+  if (!event.target.classList.contains('toggle')) return;
+
+  // Prevent default link behavior
+  event.preventDefault();
+
+  // Get the content
+  var content = document.querySelector(event.target.hash);
+  if (!content) return;
+
+  // Toggle the content
+  toggle(content);
+
+}, false);
+</script>
+<style type="text/css">
+  .toggle-content {
+  display: none;
+  height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: height 350ms ease-in-out, opacity 750ms ease-in-out;
+}
+
+.toggle-content.is-visible {
+  display: block;
+  height: auto;
+  opacity: 1;
+}
+.toggle {
+    font-size: larger;
+    color: #333;
+    text-decoration: none;
+    border: 1px solid #333;
+    padding: 10px;
+    border-radius: 25px;
+}
+body {
+    margin: 50px;
+      text-align: center;
+    background: #00C8FF;
+}
+#example {
+    font-size: larger;
+    padding: 50px;
+    text-align: justify;
+    line-height: 1.5;
+    color:#fff;}
+
+.button {
+    display: inline-block;
+    position: relative;
+    margin: 1em;
+    padding: 0.67em;
+    border: 2px solid #FFF;
+    overflow: hidden;
+    text-decoration: none;
+    font-size: 2em;
+    outline: none;
+    color: #FFF;
+    background: transparent;
+    font-family: 'raleway', sans-serif;
+}
+
+.button span {
+    -webkit-transition: 0.6s;
+    -moz-transition: 0.6s;
+    -o-transition: 0.6s;
+    transition: 0.6s;
+    -webkit-transition-delay: 0.2s;
+    -moz-transition-delay: 0.2s;
+    -o-transition-delay: 0.2s;
+    transition-delay: 0.2s;
+}
+
+.button:before,
+.button:after {
+    content: '';
+    position: absolute;
+    top: 0.67em;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    -webkit-transition: .4s,opacity .6s;
+    -moz-transition: .4s,opacity .6s;
+    -o-transition: .4s,opacity .6s;
+    transition: .4s,opacity .6s;
+}
+
+/* :before */
+
+.button:before {
+    content: attr(data-hover);
+    -webkit-transform: translate(-150%,0);
+    -moz-transform: translate(-150%,0);
+    -ms-transform: translate(-150%,0);
+    -o-transform: translate(-150%,0);
+    transform: translate(-150%,0);
+}
+
+/* :after */
+
+.button:after {
+    content: attr(data-active);
+    -webkit-transform: translate(150%,0);
+    -moz-transform: translate(150%,0);
+    -ms-transform: translate(150%,0);
+    -o-transform: translate(150%,0);
+    transform: translate(150%,0);
+}
+
+/* Span on :hover and :active */
+
+.button:hover span,
+.button:active span {
+    opacity: 0;
+    -webkit-transform: scale(0.3);
+    -moz-transform: scale(0.3);
+    -ms-transform: scale(0.3);
+    -o-transform: scale(0.3);
+    transform: scale(0.3);
+}
+
+/*  
+    We show :before pseudo-element on :hover 
+    and :after pseudo-element on :active 
+*/
+
+.button:hover:before,
+.button:active:after {
+    opacity: 1;
+    -webkit-transform: translate(0,0);
+    -moz-transform: translate(0,0);
+    -ms-transform: translate(0,0);
+    -o-transform: translate(0,0);
+    transform: translate(0,0);
+    -webkit-transition-delay: .4s;
+    -moz-transition-delay: .4s;
+    -o-transition-delay: .4s;
+    transition-delay: .4s;
+}
+
+/* 
+  We hide :before pseudo-element on :active
+*/
+
+.button:active:before {
+    -webkit-transform: translate(-150%,0);
+    -moz-transform: translate(-150%,0);
+    -ms-transform: translate(-150%,0);
+    -o-transform: translate(-150%,0);
+    transform: translate(-150%,0);
+    -webkit-transition-delay: 0s;
+    -moz-transition-delay: 0s;
+    -o-transition-delay: 0s;
+    transition-delay: 0s;
+}
+</style>
+</head>
+<body>
+<p>
+  <a  type ="button" class="toggle button"  data-hover="Words fades Out" data-active="Words fades In"> <span>Words fades In</span></a>
+</p>
+
+<div class="toggle-content" id="example">
+Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+</div>
+
+
+</body>
+</html>
+
